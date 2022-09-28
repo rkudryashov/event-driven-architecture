@@ -1,0 +1,11 @@
+= Event-driven architecture demo
+
+image:https://github.com/rkudryashov/event-driven-architecture/actions/workflows/workflow.yaml/badge.svg[CI/CD,link=https://github.com/rkudryashov/event-driven-architecture/actions]
+
+image:https://romankudryashov.com/blog/2024/07/event-driven-architecture/images/architecture.png[Architecture,800]
+
+https://romankudryashov.com/blog/2024/07/event-driven-architecture[Article]
+
+https://eda-demo.romankudryashov.com[Live demo]
+
+The source code is available on https://github.com/rkudryashov/event-driven-architecture[GitHub] and https://gitlab.com/romankudryashov/event-driven-architecture[GitLab].
