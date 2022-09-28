@@ -1,0 +1,267 @@
+openapi: "3.0.3"
+info:
+  title: Book service
+  version: 0.0.1
+paths:
+  /books:
+    get:
+      tags:
+        - books
+      operationId: getBooks
+      responses:
+        '200':
+          description: list of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    post:
+      tags:
+        - books
+      operationId: createBook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/BookToSave"
+        required: true
+      responses:
+        '200':
+          description: created book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+  /books/{id}:
+    put:
+      tags:
+        - books
+      operationId: updateBook
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/BookToSave"
+        required: true
+      responses:
+        '200':
+          description: updated book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+    delete:
+      tags:
+        - books
+      operationId: deleteBook
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        '204':
+          description: book was deleted
+  /books/{bookId}/loans:
+    post:
+      tags:
+        - bookLoans
+      operationId: createBookLoan
+      parameters:
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+            format: int64
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/BookLoanToSave"
+        required: true
+      responses:
+        '200':
+          description: created book loan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookLoan'
+  /books/{bookId}/loans/{id}:
+    delete:
+      tags:
+        - bookLoans
+      operationId: deleteBookLoan
+      parameters:
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+            format: int64
+          required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        '204':
+          description: book was deleted
+  /authors:
+    get:
+      tags:
+        - authors
+      operationId: getAuthors
+      responses:
+        '200':
+          description: list of authors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
+  /authors/{id}:
+    put:
+      tags:
+        - authors
+      operationId: updateAuthor
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/AuthorToSave"
+        required: true
+      responses:
+        '200':
+          description: updated author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+components:
+  schemas:
+    Book:
+      required:
+        - id
+        - name
+        - authors
+        - publicationYear
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Author'
+        publicationYear:
+          type: integer
+        currentLoan:
+          $ref: '#/components/schemas/BookLoan'
+    BookToSave:
+      required:
+        - name
+        - authorIds
+        - publicationYear
+      type: object
+      properties:
+        name:
+          type: string
+        authorIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        publicationYear:
+          type: integer
+    Author:
+      required:
+        - id
+        - firstName
+        - middleName
+        - lastName
+        - country
+        - dateOfBirth
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        country:
+          $ref: '#/components/schemas/Country'
+        dateOfBirth:
+          type: string
+          format: date
+    AuthorToSave:
+      required:
+        - firstName
+        - middleName
+        - lastName
+        - country
+        - dateOfBirth
+      type: object
+      properties:
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        country:
+          $ref: '#/components/schemas/Country'
+        dateOfBirth:
+          type: string
+          format: date
+    BookLoan:
+      required:
+        - id
+        - userId
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+    BookLoanToSave:
+      required:
+        - userId
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+    Country:
+      type: string
+      enum:
+        - Russia
