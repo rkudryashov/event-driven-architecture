@@ -1,0 +1,75 @@
+# development configuration
+services:
+
+  book-service:
+    ports:
+      # this is needed to access the service's endpoints from a host machine
+      - "8091:8080"
+
+  notification-service:
+    ports:
+      # this is needed to access the service's endpoints from a host machine
+      - "8093:8080"
+
+  book-db:
+    ports:
+      # this is needed to access the database from a host machine (when the appropriate service is running not in a Docker container)
+      - "5491:5432"
+
+  user-db:
+    ports:
+      # this is needed to access the database from a host machine (when the appropriate service is running not in a Docker container)
+      - "5492:5432"
+
+  notification-db:
+    ports:
+      # this is needed to access the database from a host machine (when the appropriate service is running not in a Docker container)
+      - "5493:5432"
+
+  kafka-connect:
+    ports:
+      # this is needed to access Kafka Connect REST API from a host machine
+      - "8083:8083"
+
+  schema-registry:
+    ports:
+      # this is needed to access Apicurio's UI from a host machine
+      - "8080:8080"
+
+  # MONITORING TOOLS
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    container_name: kafka-ui
+    restart: always
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    ports:
+      # this is needed to access the UI from a host machine
+      - "8101:8080"
+
+  pgadmin:
+    image: dpage/pgadmin4:8.9
+    container_name: pgadmin
+    restart: always
+    # DO NOT USE SUCH A SETUP FOR PROD!
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: some_password
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports:
+      # this is needed to access pgAdmin UI from a host machine
+      - "8102:80"
+    volumes:
+      - ./misc/pgadmin/servers.json:/pgadmin4/servers.json:ro
+      - ./misc/pgadmin/pgpass:/tmp/pgpass:ro
+      - ./misc/pgadmin/preferences.json:/pgadmin4/preferences.json:ro
+    # DO NOT PASS CREDENTIALS THIS WAY IN REAL ENVIRONMENTS!
+    # Using `pgpass` and passing it as follows allows you to save yourself the trouble of entering Postgres DB credentials in pgAdmin to connect to the databases every time you restart the project
+    entrypoint: >
+      /bin/sh -c "
+      cp -f /tmp/pgpass /var/lib/pgadmin/;
+      chmod 600 /var/lib/pgadmin/pgpass;
+      /entrypoint.sh
+      "

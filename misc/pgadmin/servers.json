@@ -1,0 +1,34 @@
+{
+  "Servers": {
+    "book-db": {
+      "Name": "book-db",
+      "Group": "Servers",
+      "Host": "book-db",
+      "Port": 5432,
+      "MaintenanceDB": "book",
+      "Username": "postgres",
+      "PassFile": "/var/lib/pgadmin/pgpass",
+      "SSLMode": "prefer"
+    },
+    "user-db": {
+      "Name": "user-db",
+      "Group": "Servers",
+      "Host": "user-db",
+      "Port": 5432,
+      "MaintenanceDB": "user",
+      "Username": "postgres",
+      "PassFile": "/var/lib/pgadmin/pgpass",
+      "SSLMode": "prefer"
+    },
+    "notification-db": {
+      "Name": "notification-db",
+      "Group": "Servers",
+      "Host": "notification-db",
+      "Port": 5432,
+      "MaintenanceDB": "notification",
+      "Username": "postgres",
+      "PassFile": "/var/lib/pgadmin/pgpass",
+      "SSLMode": "prefer"
+    }
+  }
+}

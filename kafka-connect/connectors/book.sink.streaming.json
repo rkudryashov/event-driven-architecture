@@ -1,0 +1,19 @@
+{
+  "name": "book.sink.streaming",
+  "config": {
+    "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
+    "tasks.max": "1",
+    "topics": "streaming.users",
+    "connection.url": "jdbc:postgresql://book-db:5432/book",
+    "connection.username": "${file:/secrets/postgres.properties:username}",
+    "connection.password": "${file:/secrets/postgres.properties:password}",
+    "insert.mode": "upsert",
+    "primary.key.mode": "record_value",
+    "primary.key.fields": "id",
+    "table.name.format": "public.user_replica",
+    "field.include.list": "streaming.users:id,streaming.users:status",
+    "max.retries": 1,
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter"
+  }
+}

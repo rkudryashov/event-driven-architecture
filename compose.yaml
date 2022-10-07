@@ -1,0 +1,176 @@
+# base configuration
+services:
+
+  # MICROSERVICES
+  book-service:
+    image: kudryashovroman/event-driven-architecture:book-service
+    container_name: book-service
+    restart: always
+    depends_on:
+      - book-db
+    healthcheck:
+      test: [ "CMD", "health-check" ]
+      interval: 1m
+      retries: 3
+      start_period: 10s
+      timeout: 3s
+
+  user-service:
+    image: kudryashovroman/event-driven-architecture:user-service
+    container_name: user-service
+    restart: always
+    depends_on:
+      - user-db
+    healthcheck:
+      test: [ "CMD", "health-check" ]
+      interval: 1m
+      retries: 3
+      start_period: 10s
+      timeout: 3s
+
+  user-service-2:
+    image: kudryashovroman/event-driven-architecture:user-service
+    container_name: user-service-2
+    restart: always
+    depends_on:
+      - user-db
+    environment:
+      SPRING_APPLICATION_NAME: user-service-2
+    healthcheck:
+      test: [ "CMD", "health-check" ]
+      interval: 1m
+      retries: 3
+      start_period: 10s
+      timeout: 3s
+
+  notification-service:
+    image: kudryashovroman/event-driven-architecture:notification-service
+    container_name: notification-service
+    restart: always
+    depends_on:
+      - notification-db
+    healthcheck:
+      test: [ "CMD", "health-check" ]
+      interval: 1m
+      retries: 3
+      start_period: 10s
+      timeout: 3s
+
+  # DATABASES FOR MICROSERVICES
+  book-db:
+    image: postgres:16.3
+    container_name: book-db
+    restart: always
+    environment:
+      POSTGRES_DB: book
+      POSTGRES_PASSWORD: ${BOOK_DB_PASSWORD}
+    healthcheck:
+      test: "pg_isready -U postgres"
+      interval: 10s
+      retries: 3
+      start_period: 10s
+      timeout: 3s
+    command: >
+      postgres -c wal_level=logical
+               -c timezone=Europe/Moscow
+
+  user-db:
+    image: postgres:16.3
+    container_name: user-db
+    restart: always
+    environment:
+      POSTGRES_DB: user
+      POSTGRES_PASSWORD: ${USER_DB_PASSWORD}
+    healthcheck:
+      test: "pg_isready -U postgres"
+      interval: 10s
+      retries: 3
+      start_period: 10s
+      timeout: 3s
+    command: >
+      postgres -c wal_level=logical
+               -c timezone=Europe/Moscow
+
+  notification-db:
+    image: postgres:16.3
+    container_name: notification-db
+    restart: always
+    environment:
+      POSTGRES_DB: notification
+      POSTGRES_PASSWORD: ${NOTIFICATION_DB_PASSWORD}
+    healthcheck:
+      test: "pg_isready -U postgres"
+      interval: 10s
+      retries: 3
+      start_period: 10s
+      timeout: 3s
+    command: >
+      postgres -c wal_level=logical
+               -c timezone=Europe/Moscow
+
+  # INFRASTRUCTURE
+  # One Kafka Connect instance is for the purposes of simplicity. Do your own research to set up a cluster
+  kafka-connect:
+    image: debezium/connect:2.7.0.Beta2
+    container_name: kafka-connect
+    restart: always
+    depends_on: [ kafka, schema-registry, book-db, user-db, notification-db ]
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: kafka-connect-cluster
+      CONFIG_STORAGE_TOPIC: kafka-connect.config
+      OFFSET_STORAGE_TOPIC: kafka-connect.offset
+      STATUS_STORAGE_TOPIC: kafka-connect.status
+      ENABLE_APICURIO_CONVERTERS: true
+      CONNECT_EXACTLY_ONCE_SOURCE_SUPPORT: enabled
+      CONNECT_CONFIG_PROVIDERS: "file"
+      CONNECT_CONFIG_PROVIDERS_FILE_CLASS: "org.apache.kafka.common.config.provider.FileConfigProvider"
+      CONNECT_LOG4J_LOGGER_org.apache.kafka.clients: ERROR
+    volumes:
+      - ./kafka-connect/postgres.properties:/secrets/postgres.properties:ro
+      - ./kafka-connect/logs/:/kafka/logs/
+
+  connectors-loader:
+    image: bash:5.2
+    container_name: connectors-loader
+    depends_on: [ kafka-connect ]
+    volumes:
+      - ./kafka-connect/connectors/:/usr/connectors:ro
+      - ./kafka-connect/load-connectors.sh/:/usr/load-connectors.sh:ro
+    command: bash /usr/load-connectors.sh
+
+  schema-registry:
+    image: apicurio/apicurio-registry-mem:2.6.0.Final
+    container_name: schema-registry
+    restart: always
+
+  # One Kafka instance is for the purposes of simplicity. Do your own research to set up a cluster
+  kafka:
+    image: bitnami/kafka:3.7.0
+    container_name: kafka
+    restart: always
+    environment:
+      # KRaft settings
+      KAFKA_CFG_NODE_ID: 0
+      KAFKA_CFG_PROCESS_ROLES: controller,broker
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
+      # listeners
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      # other
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: false
+    volumes:
+      - ./misc/kafka_data:/bitnami
+
+  nginx:
+    image: nginx:1.25.5
+    container_name: nginx
+    restart: always
+    depends_on: [ book-service, notification-service ]
+    ports:
+      - "80:80"
+    volumes:
+      - ./misc/nginx/:/etc/nginx/conf.d/:ro

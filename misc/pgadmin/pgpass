@@ -1,0 +1,3 @@
+book-db:5432:book:postgres:password
+user-db:5432:user:postgres:password
+notification-db:5432:notification:postgres:password

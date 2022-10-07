@@ -1,0 +1,27 @@
+{
+  "name": "user.sink.dlq-unprocessed",
+  "config": {
+    "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
+    "tasks.max": "1",
+    "topics": "library.events.dlq.unprocessed",
+    "connection.url": "jdbc:postgresql://user-db:5432/user",
+    "connection.username": "${file:/secrets/postgres.properties:username}",
+    "connection.password": "${file:/secrets/postgres.properties:password}",
+    "insert.mode": "insert",
+    "table.name.format": "inbox_unprocessed",
+    "max.retries": 1,
+    "transforms": "hoistField,copyHeadersToValue",
+    "transforms.hoistField.type": "org.apache.kafka.connect.transforms.HoistField$Value",
+    "transforms.hoistField.field": "message",
+    "transforms.copyHeadersToValue.type": "io.debezium.transforms.HeaderToValue",
+    "transforms.copyHeadersToValue.headers": "__connect.errors.exception.stacktrace",
+    "transforms.copyHeadersToValue.fields": "error",
+    "transforms.copyHeadersToValue.operation": "copy",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "header.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "errors.tolerance": "all",
+    "errors.log.enable": true,
+    "errors.log.include.messages": true
+  }
+}

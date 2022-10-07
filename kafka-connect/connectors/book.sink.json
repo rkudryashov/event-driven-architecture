@@ -1,0 +1,28 @@
+{
+  "name": "book.sink",
+  "config": {
+    "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
+    "tasks.max": "1",
+    "topics": "library.rollback",
+    "connection.url": "jdbc:postgresql://book-db:5432/book",
+    "connection.username": "${file:/secrets/postgres.properties:username}",
+    "connection.password": "${file:/secrets/postgres.properties:password}",
+    "insert.mode": "upsert",
+    "primary.key.mode": "record_value",
+    "primary.key.fields": "id",
+    "table.name.format": "inbox",
+    "max.retries": 1,
+    "transforms": "convertCloudEvent",
+    "transforms.convertCloudEvent.type": "io.debezium.connector.jdbc.transforms.ConvertCloudEventToSaveableForm",
+    "transforms.convertCloudEvent.fields.mapping": "id,source,type,data:payload",
+    "transforms.convertCloudEvent.serializer.type": "avro",
+    "transforms.convertCloudEvent.schema.cloudevents.name": "CloudEvents",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": false,
+    "value.converter": "io.debezium.converters.CloudEventsConverter",
+    "value.converter.serializer.type": "avro",
+    "value.converter.data.serializer.type": "avro",
+    "value.converter.avro.apicurio.registry.url": "http://schema-registry:8080",
+    "value.converter.schema.cloudevents.name": "CloudEvents"
+  }
+}

@@ -1,0 +1,119 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+      - name: Build
+        # TODO: enable test
+        run: ./gradlew build -x test
+
+  build-and-push-book-service-image:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+      - name: Build Docker image
+        run: ./gradlew :book-service:bootBuildImage
+      - name: Login to Docker Hub
+        if: ${{ github.event_name == 'push' }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Publish Docker image
+        if: ${{ github.event_name == 'push' }}
+        run: docker push kudryashovroman/event-driven-architecture:book-service
+
+  build-and-push-user-service-image:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+      - name: Build Docker image
+        run: ./gradlew :user-service:bootBuildImage
+      - name: Login to Docker Hub
+        if: ${{ github.event_name == 'push' }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Publish Docker image
+        if: ${{ github.event_name == 'push' }}
+        run: docker push kudryashovroman/event-driven-architecture:user-service
+
+  build-and-push-notification-service-image:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+      - name: Build Docker image
+        run: ./gradlew :notification-service:bootBuildImage
+      - name: Login to Docker Hub
+        if: ${{ github.event_name == 'push' }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Publish Docker image
+        if: ${{ github.event_name == 'push' }}
+        run: docker push kudryashovroman/event-driven-architecture:notification-service
+
+  deploy:
+    if: ${{ github.event_name == 'push' }}
+    needs: [ build-and-push-book-service-image, build-and-push-user-service-image, build-and-push-notification-service-image ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Copy files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOYMENT_SERVER_HOST }}
+          port: ${{ secrets.DEPLOYMENT_SERVER_PORT }}
+          username: ${{ secrets.DEPLOYMENT_SERVER_USERNAME }}
+          key: ${{ secrets.DEPLOYMENT_SERVER_KEY }}
+          source: ".github/scripts,compose.yaml,.env,kafka-connect,misc/nginx"
+          target: "event-driven-architecture"
+      - name: Deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOYMENT_SERVER_HOST }}
+          port: ${{ secrets.DEPLOYMENT_SERVER_PORT }}
+          username: ${{ secrets.DEPLOYMENT_SERVER_USERNAME }}
+          key: ${{ secrets.DEPLOYMENT_SERVER_KEY }}
+          script: |
+            cd ~/event-driven-architecture/.github/scripts
+            chmod +x ./deploy.sh
+            ./deploy.sh

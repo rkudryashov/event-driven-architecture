@@ -1,0 +1,30 @@
+{
+  "name": "user.sink.dlq-ce-json",
+  "config": {
+    "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
+    "tasks.max": "1",
+    "topics": "library.events.dlq.ce-json",
+    "connection.url": "jdbc:postgresql://user-db:5432/user",
+    "connection.username": "${file:/secrets/postgres.properties:username}",
+    "connection.password": "${file:/secrets/postgres.properties:password}",
+    "insert.mode": "upsert",
+    "primary.key.mode": "record_value",
+    "primary.key.fields": "id",
+    "table.name.format": "inbox",
+    "max.retries": 1,
+    "transforms": "convertCloudEvent",
+    "transforms.convertCloudEvent.type": "io.debezium.connector.jdbc.transforms.ConvertCloudEventToSaveableForm",
+    "transforms.convertCloudEvent.fields.mapping": "id,source,type,data:payload",
+    "transforms.convertCloudEvent.serializer.type": "json",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": false,
+    "value.converter": "io.debezium.converters.CloudEventsConverter",
+    "value.converter.serializer.type": "json",
+    "value.converter.data.serializer.type": "json",
+    "errors.tolerance": "all",
+    "errors.log.enable": true,
+    "errors.deadletterqueue.topic.name": "library.events.dlq.unprocessed",
+    "errors.deadletterqueue.topic.replication.factor": 1,
+    "errors.deadletterqueue.context.headers.enable": true
+  }
+}

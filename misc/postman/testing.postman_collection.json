@@ -1,0 +1,270 @@
+{
+	"info": {
+		"name": "Event-driven architecture demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "kafka-connect.get-connectors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/connectors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "kafka-connect.get-connector-plugins",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/connector-plugins",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connector-plugins"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "book-service.get-books",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/book-service/books",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"book-service",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "book-service.create-book",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"The White Guard\",\r\n    \"authorIds\": [3],\r\n    \"publicationYear\": 1925\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/book-service/books",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"book-service",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "book-service.update-book",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"The Cherry Orchard\",\r\n    \"authorIds\": [2],\r\n    \"publicationYear\": 1905\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/book-service/books/3",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"book-service",
+						"books",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "book-service.delete-book",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"The Captain's Daughter\",\r\n    \"authorId\": 2,\r\n    \"publicationYear\": 1838\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/book-service/books/6",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"book-service",
+						"books",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "book-service.get-authors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/book-service/authors",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"book-service",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "book-service.update-author",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"Fyodor\",\r\n    \"middleName\": \"Mikhailovich\",\r\n    \"lastName\": \"Dostoyevskiy\",\r\n    \"country\": \"Russia\",\r\n    \"dateOfBirth\": \"1821-10-30\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/book-service/authors/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"book-service",
+						"authors",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "book-service.create-book-loan",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/book-service/books/5/loans",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"book-service",
+						"books",
+						"5",
+						"loans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "book-service.delete-book-loan",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/book-service/books/5/loans/4",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"book-service",
+						"books",
+						"5",
+						"loans",
+						"4"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost",
+			"type": "default"
+		}
+	]
+}

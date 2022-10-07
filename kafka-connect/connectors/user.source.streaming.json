@@ -1,0 +1,28 @@
+{
+  "name": "user.source.streaming",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "plugin.name": "pgoutput",
+    "database.hostname": "user-db",
+    "database.port": "5432",
+    "database.user": "${file:/secrets/postgres.properties:username}",
+    "database.password": "${file:/secrets/postgres.properties:password}",
+    "database.dbname": "user",
+    "exactly.once.support": "required",
+    "slot.name": "debezium_streaming",
+    "publication.name": "dbz_publication_streaming",
+    "topic.prefix": "streaming",
+    "topic.creation.default.replication.factor": 1,
+    "topic.creation.default.partitions": 6,
+    "table.include.list": "public.library_user",
+    "column.exclude.list": "public.library_user.created_at,public.library_user.updated_at",
+    "heartbeat.interval.ms": "5000",
+    "publication.autocreate.mode": "filtered",
+    "transforms": "renameTopic",
+    "transforms.renameTopic.type": "io.debezium.transforms.ByLogicalTableRouter",
+    "transforms.renameTopic.topic.regex": "(.*)public.(.*)",
+    "transforms.renameTopic.topic.replacement": "$1users",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter"
+  }
+}
