@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: user-service
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://user-db:5432/user
+    username: postgres
+    password: password
+
+logging.level.com.romankudryashov.eventdrivenarchitecture: debug
+
+inbox:
+  processing:
+    task:
+      cron: "*/5 * * * * *"
+      batch.size: 50
+      subtask.timeout: 10000
