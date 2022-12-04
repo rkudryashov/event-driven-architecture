@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event-driven architecture demo</title>
+    <link href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/main.css" rel="stylesheet">
+    <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/2.3.4/stomp.min.js"></script>
+    <script src="/app.js"></script>
+</head>
+<body>
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<div class="container" id="main-content">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button class="btn btn-default" id="connect" type="submit">Connect</button>
+                    <button class="btn btn-default" disabled="disabled" id="disconnect" type="submit">Disconnect
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped" id="notifications">
+                <thead>
+                <tr>
+                    <th>Notifications</th>
+                </tr>
+                </thead>
+                <tbody id="messages">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
