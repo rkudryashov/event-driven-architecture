@@ -3,7 +3,8 @@ rootProject.name = "event-driven-architecture"
 include(
     "book-service",
     "user-service",
-    "notification-service"
+    "notification-service",
+    "common-model"
 )
 
 pluginManagement {
