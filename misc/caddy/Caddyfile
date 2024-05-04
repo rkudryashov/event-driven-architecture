@@ -1,0 +1,29 @@
+{
+	order rate_limit before basicauth
+}
+
+{$DOMAIN} {
+	handle_path /book-service* {
+		rate_limit {
+			zone book_srv {
+				key {remote_host}
+				events 6
+				window 1m
+			}
+		}
+
+		reverse_proxy book-service:8080
+	}
+
+	handle_path /* {
+		rate_limit {
+			zone notification_srv {
+				key {remote_host}
+				events 30
+				window 1m
+			}
+		}
+
+		reverse_proxy notification-service:8080
+	}
+}

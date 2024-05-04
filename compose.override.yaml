@@ -73,3 +73,9 @@ services:
       chmod 600 /var/lib/pgadmin/pgpass;
       /entrypoint.sh
       "
+
+  caddy:
+    build:
+      context: ./misc/caddy/
+    environment:
+      DOMAIN: localhost

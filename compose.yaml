@@ -165,12 +165,17 @@ services:
     volumes:
       - ./misc/kafka_data:/bitnami
 
-  nginx:
-    image: nginx:1.25.5
-    container_name: nginx
+  caddy:
+    image: kudryashovroman/event-driven-architecture:caddy
+    container_name: caddy
     restart: always
     depends_on: [ book-service, notification-service ]
+    environment:
+      DOMAIN: eda-demo.romankudryashov.com
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-      - ./misc/nginx/:/etc/nginx/conf.d/:ro
+      - ./misc/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./misc/caddy/data:/data
+      - ./misc/caddy/config:/config

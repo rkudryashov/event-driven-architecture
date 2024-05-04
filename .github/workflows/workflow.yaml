@@ -90,9 +90,29 @@ jobs:
         if: ${{ github.event_name == 'push' }}
         run: docker push kudryashovroman/event-driven-architecture:notification-service
 
+  build-and-push-caddy-image:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./misc/caddy
+          push: true
+          tags: kudryashovroman/event-driven-architecture:caddy
+
   deploy:
     if: ${{ github.event_name == 'push' }}
-    needs: [ build-and-push-book-service-image, build-and-push-user-service-image, build-and-push-notification-service-image ]
+    needs: [ build-and-push-book-service-image, build-and-push-user-service-image, build-and-push-notification-service-image, build-and-push-caddy-image ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -104,7 +124,7 @@ jobs:
           port: ${{ secrets.DEPLOYMENT_SERVER_PORT }}
           username: ${{ secrets.DEPLOYMENT_SERVER_USERNAME }}
           key: ${{ secrets.DEPLOYMENT_SERVER_KEY }}
-          source: ".github/scripts,compose.yaml,.env,kafka-connect,misc/nginx"
+          source: ".github/scripts,compose.yaml,.env,kafka-connect,misc/caddy/Caddyfile"
           target: "event-driven-architecture"
       - name: Deployment
         uses: appleboy/ssh-action@v1.0.3
