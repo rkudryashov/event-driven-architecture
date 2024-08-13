@@ -29,14 +29,3 @@ create table inbox_unprocessed(
     created_at timestamptz not null default current_timestamp,
     updated_at timestamptz not null default current_timestamp
 );
-
-create table outbox(
-    id uuid primary key default gen_random_uuid(),
-    aggregate_type varchar not null,
-    aggregate_id varchar,
-    type varchar not null,
-    topic varchar not null,
-    payload jsonb not null,
-    created_at timestamptz not null default current_timestamp,
-    updated_at timestamptz not null default current_timestamp
-);

@@ -6,9 +6,9 @@ import com.romankudryashov.eventdrivenarchitecture.commonmodel.EventType
 import com.romankudryashov.eventdrivenarchitecture.commonmodel.EventType.RollbackBookLentCommand
 import com.romankudryashov.eventdrivenarchitecture.commonmodel.EventType.SendNotificationCommand
 import com.romankudryashov.eventdrivenarchitecture.commonmodel.Notification
+import com.romankudryashov.eventdrivenarchitecture.commonmodel.OutboxMessage
 import com.romankudryashov.eventdrivenarchitecture.userservice.exception.UserServiceException
 import com.romankudryashov.eventdrivenarchitecture.userservice.persistence.OutboxMessageRepository
-import com.romankudryashov.eventdrivenarchitecture.userservice.persistence.entity.OutboxMessageEntity
 import com.romankudryashov.eventdrivenarchitecture.userservice.service.OutboxMessageService
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -33,7 +33,7 @@ class OutboxMessageServiceImpl(
     override fun saveSendNotificationCommandMessage(payload: Notification, aggregateId: Long) =
         save(createOutboxMessage(AggregateType.Notification, null, SendNotificationCommand, payload))
 
-    private fun <T> createOutboxMessage(aggregateType: AggregateType, aggregateId: Long?, type: EventType, payload: T) = OutboxMessageEntity(
+    private fun <T> createOutboxMessage(aggregateType: AggregateType, aggregateId: Long?, type: EventType, payload: T) = OutboxMessage(
         aggregateType = aggregateType,
         aggregateId = aggregateId,
         type = type,
@@ -41,9 +41,8 @@ class OutboxMessageServiceImpl(
         payload = objectMapper.convertValue(payload, JsonNode::class.java)
     )
 
-    private fun save(outboxMessage: OutboxMessageEntity) {
+    private fun <T> save(outboxMessage: OutboxMessage<T>) {
         log.debug("Start saving an outbox message: {}", outboxMessage)
-        outboxMessageRepository.save(outboxMessage)
-        outboxMessageRepository.deleteById(outboxMessage.id!!)
+        outboxMessageRepository.writeOutboxMessageToWalInsideTransaction(outboxMessage)
     }
 }

@@ -1,10 +1,7 @@
 package com.romankudryashov.eventdrivenarchitecture.userservice.persistence.entity
 
-import com.romankudryashov.eventdrivenarchitecture.commonmodel.AggregateType
 import com.romankudryashov.eventdrivenarchitecture.commonmodel.EventType
 import com.fasterxml.jackson.databind.JsonNode
-import org.hibernate.annotations.ColumnDefault
-import org.hibernate.annotations.Generated
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import java.util.UUID
@@ -62,20 +59,3 @@ class InboxMessageEntity(
         Error
     }
 }
-
-@Entity
-@Table(name = "outbox")
-class OutboxMessageEntity(
-    @Id
-    @Generated
-    @ColumnDefault("gen_random_uuid()")
-    val id: UUID? = null,
-    @Enumerated(value = EnumType.STRING)
-    val aggregateType: AggregateType,
-    val aggregateId: Long?,
-    @Enumerated(value = EnumType.STRING)
-    val type: EventType,
-    val topic: String,
-    @JdbcTypeCode(SqlTypes.JSON)
-    val payload: JsonNode
-) : AbstractEntity()
