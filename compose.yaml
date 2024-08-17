@@ -122,11 +122,13 @@ services:
       OFFSET_STORAGE_TOPIC: kafka-connect.offset
       STATUS_STORAGE_TOPIC: kafka-connect.status
       ENABLE_APICURIO_CONVERTERS: true
+      ENABLE_DEBEZIUM_SCRIPTING: true
       CONNECT_EXACTLY_ONCE_SOURCE_SUPPORT: enabled
       CONNECT_CONFIG_PROVIDERS: "file"
       CONNECT_CONFIG_PROVIDERS_FILE_CLASS: "org.apache.kafka.common.config.provider.FileConfigProvider"
       CONNECT_LOG4J_LOGGER_org.apache.kafka.clients: ERROR
     volumes:
+      - ./kafka-connect/filtering/groovy:/kafka/connect/debezium-connector-postgres/filtering/groovy
       - ./kafka-connect/postgres.properties:/secrets/postgres.properties:ro
       - ./kafka-connect/logs/:/kafka/logs/
 
