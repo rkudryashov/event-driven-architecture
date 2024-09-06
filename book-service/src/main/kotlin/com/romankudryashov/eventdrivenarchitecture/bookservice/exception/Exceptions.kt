@@ -1,6 +1,6 @@
 package com.romankudryashov.eventdrivenarchitecture.bookservice.exception
 
-open class BookServiceException(message: String) : Exception(message)
+open class BookServiceException(message: String) : RuntimeException(message)
 
 class AccessRestrictedException : BookServiceException("Access to entity is restricted")
 

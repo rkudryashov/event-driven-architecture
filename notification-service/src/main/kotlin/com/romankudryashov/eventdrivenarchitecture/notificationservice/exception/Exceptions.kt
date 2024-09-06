@@ -1,3 +1,3 @@
 package com.romankudryashov.eventdrivenarchitecture.notificationservice.exception
 
-class NotificationServiceException(message: String) : Exception(message)
+class NotificationServiceException(message: String) : RuntimeException(message)

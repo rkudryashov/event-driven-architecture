@@ -14,6 +14,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class OutboxMessageServiceImpl(
@@ -28,8 +30,10 @@ class OutboxMessageServiceImpl(
         RollbackBookLentCommand to "rollback"
     )
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = [Exception::class])
     override fun saveRollbackBookLentCommandMessage(payload: Book) = save(createOutboxMessage(AggregateType.Book, payload.id, RollbackBookLentCommand, payload))
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = [Exception::class])
     override fun saveSendNotificationCommandMessage(payload: Notification, aggregateId: Long) =
         save(createOutboxMessage(AggregateType.Notification, null, SendNotificationCommand, payload))
 

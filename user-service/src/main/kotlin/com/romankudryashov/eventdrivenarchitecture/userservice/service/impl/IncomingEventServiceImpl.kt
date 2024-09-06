@@ -38,7 +38,7 @@ class IncomingEventServiceImpl(
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    @Transactional(propagation = Propagation.MANDATORY, noRollbackFor = [RuntimeException::class])
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     override fun process(eventType: EventType, payload: JsonNode) {
         log.debug("Start processing an incoming event: type={}, payload={}", eventType, payload)
 

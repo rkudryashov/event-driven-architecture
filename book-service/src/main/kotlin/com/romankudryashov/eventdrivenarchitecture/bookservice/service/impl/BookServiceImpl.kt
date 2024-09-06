@@ -50,7 +50,7 @@ class BookServiceImpl(
         bookEntityToDtoConverter.convert(entity)
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = [Exception::class])
     override fun create(book: BookToSave): BookDto {
         log.debug("Start creating a book: {}", book)
 
@@ -63,7 +63,7 @@ class BookServiceImpl(
         return bookEntityToDtoConverter.convert(createdBook)
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = [Exception::class])
     override fun update(id: Long, book: BookToSave): BookDto {
         log.debug("Start updating a book: id={}, new state={}", id, book)
 
@@ -78,7 +78,7 @@ class BookServiceImpl(
         return bookEntityToDtoConverter.convert(updatedBook)
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = [Exception::class])
     override fun delete(id: Long) {
         log.debug("Start deleting a book: id={}", id)
 
@@ -94,7 +94,7 @@ class BookServiceImpl(
         }
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = [Exception::class])
     override fun lendBook(bookId: Long, bookLoan: BookLoanToSave): BookLoanDto {
         log.debug("Start lending a book: bookId={}, bookLoan={}", bookId, bookLoan)
 
@@ -116,7 +116,7 @@ class BookServiceImpl(
         return bookLoanEntityToDtoConverter.convert(bookToLend.currentLoan()!!)
     }
 
-    @Transactional(propagation = Propagation.MANDATORY, noRollbackFor = [RuntimeException::class])
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = [Exception::class])
     override fun cancelBookLoan(bookId: Long, bookLoanId: Long) {
         log.debug("Start cancelling book loan for a book: bookId={}, bookLoanId={}", bookId, bookLoanId)
 
@@ -131,7 +131,7 @@ class BookServiceImpl(
         outboxMessageService.saveBookLoanCanceledEventMessage(modelOfBookToCancelLoan)
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = [Exception::class])
     override fun returnBook(bookId: Long, bookLoanId: Long) {
         log.debug("Start returning a book: bookId={}, bookLoanId={}", bookId, bookLoanId)
 

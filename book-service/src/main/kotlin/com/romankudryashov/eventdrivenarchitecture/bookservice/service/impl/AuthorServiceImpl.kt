@@ -35,7 +35,7 @@ class AuthorServiceImpl(
 
     override fun getEntityById(id: Long): AuthorEntity? = authorRepository.findByIdOrNull(id)
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = [Exception::class])
     override fun update(id: Long, author: AuthorToSave): AuthorDto {
         log.debug("Start update an author: id={}, new state={}", id, author)
 

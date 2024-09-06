@@ -22,7 +22,7 @@ class InboxMessageServiceImpl(
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = [RuntimeException::class])
     override fun markInboxMessagesAsReadyForProcessingByInstance(batchSize: Int): Int {
         fun saveReadyForProcessing(inboxMessage: InboxMessageEntity) {
             log.debug("Start saving a message ready for processing, id={}", inboxMessage.id)
@@ -46,7 +46,7 @@ class InboxMessageServiceImpl(
     override fun getBatchForProcessing(batchSize: Int): List<InboxMessageEntity> =
         inboxMessageRepository.findAllByStatusAndProcessedByOrderByCreatedAtAsc(InboxMessageEntity.Status.ReadyForProcessing, applicationName, PageRequest.of(0, batchSize))
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = [RuntimeException::class])
     override fun process(inboxMessage: InboxMessageEntity) {
         log.debug("Start processing an inbox message with id={}", inboxMessage.id)
 
