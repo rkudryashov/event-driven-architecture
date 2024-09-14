@@ -58,7 +58,7 @@ services:
 
   # DATABASES FOR MICROSERVICES
   book-db:
-    image: postgres:16.3
+    image: postgres:17.0
     container_name: book-db
     restart: always
     environment:
@@ -75,7 +75,7 @@ services:
                -c timezone=Europe/Moscow
 
   user-db:
-    image: postgres:16.3
+    image: postgres:17.0
     container_name: user-db
     restart: always
     environment:
@@ -92,7 +92,7 @@ services:
                -c timezone=Europe/Moscow
 
   notification-db:
-    image: postgres:16.3
+    image: postgres:17.0
     container_name: notification-db
     restart: always
     environment:
@@ -111,7 +111,7 @@ services:
   # INFRASTRUCTURE
   # One Kafka Connect instance is for the purposes of simplicity. Do your own research to set up a cluster
   kafka-connect:
-    image: debezium/connect:2.7.0.Beta2
+    image: debezium/connect:3.0.0.Final
     container_name: kafka-connect
     restart: always
     depends_on: [ kafka, schema-registry, book-db, user-db, notification-db ]
@@ -142,13 +142,13 @@ services:
     command: bash /usr/load-connectors.sh
 
   schema-registry:
-    image: apicurio/apicurio-registry-mem:2.6.0.Final
+    image: apicurio/apicurio-registry-mem:2.6.4.Final
     container_name: schema-registry
     restart: always
 
   # One Kafka instance is for the purposes of simplicity. Do your own research to set up a cluster
   kafka:
-    image: bitnami/kafka:3.7.0
+    image: bitnami/kafka:3.8.0
     container_name: kafka
     restart: always
     environment:
