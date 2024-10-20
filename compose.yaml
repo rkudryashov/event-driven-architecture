@@ -142,7 +142,7 @@ services:
     command: bash /usr/load-connectors.sh
 
   schema-registry:
-    image: apicurio/apicurio-registry-mem:2.6.4.Final
+    image: apicurio/apicurio-registry:3.0.2
     container_name: schema-registry
     restart: always
 

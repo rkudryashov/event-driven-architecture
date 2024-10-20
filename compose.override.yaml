@@ -32,9 +32,19 @@ services:
       - "8083:8083"
 
   schema-registry:
+    environment:
+      QUARKUS_HTTP_CORS_ORIGINS: http://localhost:8103
     ports:
-      # this is needed to access Apicurio's UI from a host machine
+      # this is needed to access Apicurio Registry from a host machine
       - "8080:8080"
+
+  schema-registry-ui:
+    image: apicurio/apicurio-registry-ui:3.0.2
+    container_name: schema-registry-ui
+    restart: always
+    ports:
+      # this is needed to access Apicurio Registry UI from a host machine
+      - "8103:8080"
 
   # MONITORING TOOLS
   kafka-ui:
