@@ -1,4 +1,4 @@
-= Event-driven architecture demo
+= Event-driven architecture on the modern stack of Java technologies
 
 image:https://github.com/rkudryashov/event-driven-architecture/actions/workflows/workflow.yaml/badge.svg[CI/CD,link=https://github.com/rkudryashov/event-driven-architecture/actions]
 
