@@ -39,7 +39,7 @@ services:
       - "8080:8080"
 
   schema-registry-ui:
-    image: apicurio/apicurio-registry-ui:3.0.2
+    image: apicurio/apicurio-registry-ui:3.0.3
     container_name: schema-registry-ui
     restart: always
     ports:

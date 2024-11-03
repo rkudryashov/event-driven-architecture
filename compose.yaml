@@ -118,7 +118,7 @@ services:
   # INFRASTRUCTURE
   # One Kafka Connect instance is for the purposes of simplicity. Do your own research to set up a cluster
   kafka-connect:
-    image: debezium/connect:3.0.0.Final
+    image: quay.io/debezium/connect:3.0.1.Final
     container_name: kafka-connect
     restart: always
     depends_on: [ kafka, schema-registry, book-db, user-db, notification-db ]
@@ -149,7 +149,7 @@ services:
     command: bash /usr/load-connectors.sh
 
   schema-registry:
-    image: apicurio/apicurio-registry:3.0.2
+    image: apicurio/apicurio-registry:3.0.3
     container_name: schema-registry
     restart: always
 
