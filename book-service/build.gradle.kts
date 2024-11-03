@@ -54,10 +54,7 @@ tasks.withType<ProcessAot> {
 
 tasks.withType<BootBuildImage> {
     buildpacks = setOf("gcr.io/paketo-buildpacks/java-native-image", "gcr.io/paketo-buildpacks/health-checker")
-    environment = mapOf(
-        "BP_HEALTH_CHECKER_ENABLED" to "true",
-        "THC_PATH" to "/actuator/health"
-    )
+    environment = mapOf("BP_HEALTH_CHECKER_ENABLED" to "true")
     imageName = "$dockerRepository:${project.name}"
 }
 

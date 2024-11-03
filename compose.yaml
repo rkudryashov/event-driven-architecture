@@ -8,8 +8,10 @@ services:
     restart: always
     depends_on:
       - book-db
+    environment:
+      THC_PATH: "/actuator/health"
     healthcheck:
-      test: [ "CMD", "health-check" ]
+      test: [ "CMD", "/workspace/health-check" ]
       interval: 1m
       retries: 3
       start_period: 10s
@@ -21,8 +23,10 @@ services:
     restart: always
     depends_on:
       - user-db
+    environment:
+      THC_PATH: "/actuator/health"
     healthcheck:
-      test: [ "CMD", "health-check" ]
+      test: [ "CMD", "/workspace/health-check" ]
       interval: 1m
       retries: 3
       start_period: 10s
@@ -36,8 +40,9 @@ services:
       - user-db
     environment:
       SPRING_APPLICATION_NAME: user-service-2
+      THC_PATH: "/actuator/health"
     healthcheck:
-      test: [ "CMD", "health-check" ]
+      test: [ "CMD", "/workspace/health-check" ]
       interval: 1m
       retries: 3
       start_period: 10s
@@ -49,8 +54,10 @@ services:
     restart: always
     depends_on:
       - notification-db
+    environment:
+      THC_PATH: "/actuator/health"
     healthcheck:
-      test: [ "CMD", "health-check" ]
+      test: [ "CMD", "/workspace/health-check" ]
       interval: 1m
       retries: 3
       start_period: 10s
