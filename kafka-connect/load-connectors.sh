@@ -1,6 +1,6 @@
 #!/bin/bash
 
-apk update && apk add curl
+apk --no-cache add curl
 
 KAFKA_CONNECT_URL='http://kafka-connect:8083/connectors'
 
