@@ -11,9 +11,12 @@ repositories {
 }
 
 val springCoreVersion: String by project
+val flywayVersion: String by project
 
 dependencies {
     implementation("org.springframework:spring-core:$springCoreVersion")
+    // TODO: remove after https://github.com/oracle/graalvm-reachability-metadata/issues/424
+    implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
 }
 
 tasks.withType<BootJar> {

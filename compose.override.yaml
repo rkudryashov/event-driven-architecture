@@ -39,7 +39,7 @@ services:
       - "8080:8080"
 
   schema-registry-ui:
-    image: apicurio/apicurio-registry-ui:3.0.3
+    image: apicurio/apicurio-registry-ui:3.0.6
     container_name: schema-registry-ui
     restart: always
     ports:
@@ -59,7 +59,7 @@ services:
       - "8101:8080"
 
   pgadmin:
-    image: dpage/pgadmin4:8.12
+    image: dpage/pgadmin4:8.14
     container_name: pgadmin
     restart: always
     # DO NOT USE SUCH A SETUP FOR PROD!

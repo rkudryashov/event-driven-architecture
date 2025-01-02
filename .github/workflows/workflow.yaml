@@ -127,7 +127,7 @@ jobs:
           source: ".github/scripts,compose.yaml,.env,kafka-connect,misc/caddy/Caddyfile"
           target: "event-driven-architecture"
       - name: Deployment
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.DEPLOYMENT_SERVER_HOST }}
           port: ${{ secrets.DEPLOYMENT_SERVER_PORT }}
