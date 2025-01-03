@@ -39,7 +39,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     // "webjars" dependencies are needed to serve `index.html` and its resources
-    // TODO: add `webjars-locator-lite` dependency and do not use specific versions of assets after https://github.com/spring-projects/spring-boot/issues/40146 will be resolved
+    implementation("org.webjars:webjars-locator-lite")
     implementation("org.webjars:sockjs-client:$sockjsClientVersion")
     implementation("org.webjars:stomp-websocket:$stompWebsocketVersion")
     implementation("org.webjars:bootstrap:$bootstrapVersion")
