@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.aot.ProcessAot
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
@@ -11,6 +10,12 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.spring")
     kotlin("plugin.jpa")
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
@@ -35,8 +40,7 @@ dependencies {
 
 kotlin {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_21)
-        freeCompilerArgs.add("-Xjsr305=strict")
+        freeCompilerArgs.addAll("-Xjsr305=strict")
     }
 }
 
@@ -53,7 +57,7 @@ tasks.withType<ProcessAot> {
 }
 
 tasks.withType<BootBuildImage> {
-    buildpacks = setOf("gcr.io/paketo-buildpacks/java-native-image", "gcr.io/paketo-buildpacks/health-checker")
+    buildpacks = setOf("paketobuildpacks/java-native-image", "paketobuildpacks/health-checker")
     environment = mapOf("BP_HEALTH_CHECKER_ENABLED" to "true")
     imageName = "$dockerRepository:${project.name}"
 }
