@@ -65,7 +65,7 @@ services:
 
   # DATABASES FOR MICROSERVICES
   book-db:
-    image: postgres:17.2
+    image: postgres:17.4
     container_name: book-db
     restart: always
     environment:
@@ -82,7 +82,7 @@ services:
                -c timezone=Europe/Moscow
 
   user-db:
-    image: postgres:17.2
+    image: postgres:17.4
     container_name: user-db
     restart: always
     environment:
@@ -99,7 +99,7 @@ services:
                -c timezone=Europe/Moscow
 
   notification-db:
-    image: postgres:17.2
+    image: postgres:17.4
     container_name: notification-db
     restart: always
     environment:

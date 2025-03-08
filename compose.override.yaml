@@ -59,7 +59,7 @@ services:
       - "8101:8080"
 
   pgadmin:
-    image: dpage/pgadmin4:8.14
+    image: dpage/pgadmin4:9.1.0
     container_name: pgadmin
     restart: always
     # DO NOT USE SUCH A SETUP FOR PROD!
