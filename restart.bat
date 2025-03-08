@@ -6,4 +6,4 @@ call gradlew :book-service:bootBuildImage :user-service:bootBuildImage :notifica
 @REM call gradlew :book-service:bootBuildImage || exit /b
 @REM call gradlew :user-service:bootBuildImage || exit /b
 @REM call gradlew :notification-service:bootBuildImage || exit /b
-docker compose up
+docker compose up --build
