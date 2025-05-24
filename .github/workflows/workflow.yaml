@@ -104,7 +104,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./misc/caddy
           push: true
@@ -118,7 +118,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Copy files
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.DEPLOYMENT_SERVER_HOST }}
           port: ${{ secrets.DEPLOYMENT_SERVER_PORT }}
@@ -127,7 +127,7 @@ jobs:
           source: ".github/scripts,compose.yaml,.env,kafka-connect,misc/caddy/Caddyfile"
           target: "event-driven-architecture"
       - name: Deployment
-        uses: appleboy/ssh-action@v1.2.0
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.DEPLOYMENT_SERVER_HOST }}
           port: ${{ secrets.DEPLOYMENT_SERVER_PORT }}
