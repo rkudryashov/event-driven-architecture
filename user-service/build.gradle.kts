@@ -1,14 +1,14 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
-    id("org.springframework.boot")
-    id("io.spring.dependency-management")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.spring)
+    alias(libs.plugins.springBoot)
+    alias(libs.plugins.nativeBuildTools)
+    alias(libs.plugins.kotlin.jpa)
     // TODO: remove after https://github.com/gradle/gradle/issues/17559
-    id("org.openapi.generator")
-    id("org.graalvm.buildtools.native")
-    kotlin("jvm")
-    kotlin("plugin.spring")
-    kotlin("plugin.jpa")
+    alias(libs.plugins.openApiGenerator)
 }
 
 java {
@@ -21,22 +21,21 @@ repositories {
     mavenCentral()
 }
 
-val guavaVersion: String by project
-val kotlinxHtmlVersion: String by project
 val dockerRepository: String by project
 
 dependencies {
     implementation(project(":common-model"))
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.flywaydb:flyway-database-postgresql")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-html:$kotlinxHtmlVersion")
-    implementation("com.google.guava:guava:$guavaVersion")
-    runtimeOnly("org.postgresql:postgresql")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation(platform(BOM_COORDINATES))
+    implementation(libs.springBootStarter.dataJpa)
+    implementation(libs.springBootStarter.web)
+    implementation(libs.springBootStarter.actuator)
+    implementation(libs.kotlinReflect)
+    implementation(libs.jacksonModuleKotlin)
+    implementation(libs.flyway)
+    implementation(libs.kotlinxHtml)
+    implementation(libs.guava)
+    runtimeOnly(libs.postgres)
+    testImplementation(libs.springBootStarter.test)
 }
 
 kotlin {

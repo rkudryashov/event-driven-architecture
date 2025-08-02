@@ -1,0 +1,49 @@
+[versions]
+springBoot = "3.5.4"
+kotlin = "2.2.0"
+nativeBuildTools = "0.11.0"
+openApiGenerator = "7.14.0"
+
+[libraries]
+# Spring Boot starters
+# common
+springBootStarter-dataJpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+springBootStarter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+springBootStarter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+springBootStarter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+# for `book-service`
+springBootStarter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+# for `notification-service`
+springBootStarter-mail = { module = "org.springframework.boot:spring-boot-starter-mail" }
+springBootStarter-webSocket = { module = "org.springframework.boot:spring-boot-starter-websocket" }
+
+# common libraries
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
+jacksonModuleKotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
+flyway = { module = "org.flywaydb:flyway-database-postgresql" }
+postgres = { module = "org.postgresql:postgresql" }
+
+# libraries for `common-model`
+springCore = { module = "org.springframework:spring-core" }
+
+# libraries for `user-service`
+guava = { module = "com.google.guava:guava", version = "33.4.8-jre" }
+kotlinxHtml = { module = "org.jetbrains.kotlinx:kotlinx-html", version = "0.12.0" }
+
+# libraries for `notification-service`
+webjars-locator = { module = "org.webjars:webjars-locator-lite" }
+webjars-sockjsClient = { module = "org.webjars:sockjs-client", version = "1.5.1" }
+webjars-stompWebsocket = { module = "org.webjars:stomp-websocket", version = "2.3.4" }
+webjars-bootstrap = { module = "org.webjars:bootstrap", version = "5.3.7" }
+webjars-jquery = { module = "org.webjars:jquery", version = "3.7.1" }
+
+[bundles]
+webjars = ["webjars-locator", "webjars-sockjsClient", "webjars-stompWebsocket", "webjars-bootstrap", "webjars-jquery"]
+
+[plugins]
+springBoot = { id = "org.springframework.boot", version.ref = "springBoot" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
+nativeBuildTools = { id = "org.graalvm.buildtools.native", version.ref = "nativeBuildTools" }
+openApiGenerator = { id = "org.openapi.generator", version.ref = "openApiGenerator" }
